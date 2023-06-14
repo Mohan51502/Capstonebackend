@@ -98,7 +98,36 @@ router.get("/getAllUser", async function (req, res, next) {
 
   router.get("/getUseronly", async function (req, res, next) {
     try {
-      const response = await userdb.find();
+      const response = await userdb.find({role:"user"});
+      if (response.length > 0) {
+        res.status(201).json({
+          message: "Users Fetched Successfully!!!",
+          data: response,
+          success: true,
+        });
+      } else {
+        res.status(200).json({
+          message: "No Users!!!",
+          data: [],
+          success: false,
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error,
+        success: false,
+      });
+    }
+  });
+
+
+  //////////////////get manager
+
+
+    router.get("/getManageronly", async function (req, res, next) {
+    try {
+      const response = await userdb.find({role:"manager"});
       if (response.length > 0) {
         res.status(201).json({
           message: "Users Fetched Successfully!!!",
@@ -122,6 +151,34 @@ router.get("/getAllUser", async function (req, res, next) {
   });
 
   
+
+  /////////////////////////get employee
+
+
+    router.get("/getEmployeeonly", async function (req, res, next) {
+    try {
+      const response = await userdb.find({role:"employee"});
+      if (response.length > 0) {
+        res.status(201).json({
+          message: "Users Fetched Successfully!!!",
+          data: response,
+          success: true,
+        });
+      } else {
+        res.status(200).json({
+          message: "No Users!!!",
+          data: [],
+          success: false,
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error,
+        success: false,
+      });
+    }
+  });
 
 
 
