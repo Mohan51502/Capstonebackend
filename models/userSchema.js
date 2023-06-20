@@ -25,7 +25,17 @@ const userSchema = new mongoose.Schema({
     role:{
         type:String,
         required:true,
-        default:"user"
+        default:"student"
+
+    },
+    course:{
+        type:String,
+        required:true,
+
+    },
+    phonenumber:{
+        type:String,
+        required:true,
 
     },
     password: {

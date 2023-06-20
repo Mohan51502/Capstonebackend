@@ -25,9 +25,9 @@ const transporter = nodemailer.createTransport({
 
 router.post("/register", async (req, res) => {
 
-    const { fname, email,role,password, cpassword } = req.body;
+    const { fname, email,role,course,phonenumber,password, cpassword } = req.body;
 
-    if (!fname || !email || !password || !cpassword) {
+    if (!fname || !email || !course || !phonenumber|| !password || !cpassword) {
         res.status(422).json({ error: "fill all the details" })
     }
 
@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
             res.status(422).json({ error: "Password and Confirm Password Not Match" })
         } else {
             const finalUser = new userdb({
-                fname, email, role,password, cpassword
+                fname, email, role,course,phonenumber,password, cpassword
             });
 
             // here password hasing
@@ -61,11 +61,44 @@ router.post("/register", async (req, res) => {
 
 
 
+
+
+
+
 ///getAllUsers
 
 
 
-router.get("/getAllUser", async function (req, res, next) {
+router.get("/getAllUser/:_id", async function (req, res, next) {
+    try {
+        console.log(req.params._id)
+
+
+      const response = await userdb.findOne({_id:req.params._id});
+     // if (response.length > 0) {
+        res.status(200).json({
+          message: "Users Fetched Successfully!!!",
+          data: response,
+          success: true,
+        });
+    //   } else {
+    //     res.status(200).json({
+    //       message: "No Users!!!",
+    //       success: false,
+    //     });
+    //   }
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error,
+        success: false,
+      });
+    }
+  });
+
+  ////////getuser
+
+  router.get("/getAllUser", async function (req, res, next) {
     try {
       const response = await userdb.find();
       if (response.length > 0) {
@@ -92,13 +125,14 @@ router.get("/getAllUser", async function (req, res, next) {
 
 
 
+
   /////////////////get users only
 
 
 
-  router.get("/getUseronly", async function (req, res, next) {
+  router.get("/getStudentonly", async function (req, res, next) {
     try {
-      const response = await userdb.find({role:"user"});
+      const response = await userdb.find({role:"student"});
       if (response.length > 0) {
         res.status(201).json({
           message: "Users Fetched Successfully!!!",
@@ -125,9 +159,9 @@ router.get("/getAllUser", async function (req, res, next) {
   //////////////////get manager
 
 
-    router.get("/getManageronly", async function (req, res, next) {
+    router.get("/getMentoronly", async function (req, res, next) {
     try {
-      const response = await userdb.find({role:"manager"});
+      const response = await userdb.find({role:"mentor"});
       if (response.length > 0) {
         res.status(201).json({
           message: "Users Fetched Successfully!!!",
@@ -152,34 +186,9 @@ router.get("/getAllUser", async function (req, res, next) {
 
   
 
-  /////////////////////////get employee
 
 
-    router.get("/getEmployeeonly", async function (req, res, next) {
-    try {
-      const response = await userdb.find({role:"employee"});
-      if (response.length > 0) {
-        res.status(201).json({
-          message: "Users Fetched Successfully!!!",
-          data: response,
-          success: true,
-        });
-      } else {
-        res.status(200).json({
-          message: "No Users!!!",
-          data: [],
-          success: false,
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
-        message: "Internal server error",
-        error: error,
-        success: false,
-      });
-    }
-  });
-
+    
 
 
 // user Login
@@ -349,6 +358,44 @@ router.get('/users/logout', async (req, res) => {
 
 
 //filteruser
+
+// Get a single user by id and update 
+router.put("/:_id", async (req, res) => {
+  try {
+    const post = await userdb.findByIdAndUpdate(
+      req.params._id,
+      { fname: req.body.fname, email: req.body.email },
+      { new: true }
+    );
+    if (!post) return res.status(404).send("Post not found");
+    res.send(post);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Get a single post by id
+router.get("/:id", async (req, res) => {
+  try {
+    const post = await userdb.findById(req.params._id);
+    if (!post) return res.status(404).send("Post not found");
+    res.send(post);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Deleting a post by id
+router.delete("/:_id", async (req, res) => {
+  try {
+    const post = await userdb.findByIdAndRemove(req.params._id);
+    if (!post) return res.status(404).send("Post not found");
+    res.send(post);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 
 
 

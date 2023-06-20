@@ -9,4 +9,4 @@ mongoose.connect(DB,{
     console.log(errr);
 })
 
-//mongoose.connect("mongodb+srv://rajmohan51502:vo5zORfxndu72DSl@cluster0.wwgxqxn.mongodb.net/Webcode2", {});
+//mongoose.connect("mongodb+srv://rajmohan51502:vo5zORfxndu72DSl@cluster0.wwgxqxn.mongodb.net/Capstone", {});
