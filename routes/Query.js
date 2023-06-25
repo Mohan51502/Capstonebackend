@@ -9,15 +9,14 @@ router.post("/create", async (req, res) => {
 
     const { category, voice, title,desc,userid } = req.body;
   
-    if (!category || !voice || !title || !desc ||!userid) {
+    if (!category || !voice || !title || !desc ||!userid ) {
         res.status(422).json({ error: "fill all the details" })
     }
   
     try {
   
       const finalQuery = new querydb({
-        category, voice, title,desc,userid
-    });
+        category, voice, title,desc,userid    });
   
     // here password hasing
 //console.log(finalQuery)
@@ -214,6 +213,34 @@ router.post("/create", async (req, res) => {
 
 
       const response = await querydb.findOne({_id:req.params._id});
+     // if (response.length > 0) {
+        res.status(200).json({
+          message: "Query Fetched Successfully!!!",
+          data: response,
+          success: true,
+        });
+    //   } else {
+    //     res.status(200).json({
+    //       message: "No Users!!!",
+    //       success: false,
+    //     });
+    //   }
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error,
+        success: false,
+      });
+    }
+  });
+  
+  ////////////////
+  router.get("/getmentorQuery/:_id", async function (req, res, next) {
+    try {
+        console.log(req.params._id)
+
+
+      const response = await querydb.find({mentorid:req.params._id});
      // if (response.length > 0) {
         res.status(200).json({
           message: "Query Fetched Successfully!!!",

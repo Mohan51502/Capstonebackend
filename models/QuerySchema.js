@@ -26,6 +26,12 @@ const QuerySchema = new mongoose.Schema({
   },
   status:{
     type:String,
+  },
+  fromtime:{
+    type:String,
+  },
+  totime:{
+    type:String,
   }
 
 
