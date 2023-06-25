@@ -7,23 +7,23 @@ const querydb = require("../models/QuerySchema")
 
 router.post("/create", async (req, res) => {
 
-    const { category, voice, title,desc } = req.body;
+    const { category, voice, title,desc,userid } = req.body;
   
-    if (!category || !voice || !title || !desc) {
+    if (!category || !voice || !title || !desc ||!userid) {
         res.status(422).json({ error: "fill all the details" })
     }
   
     try {
   
       const finalQuery = new querydb({
-        category, voice, title,desc
+        category, voice, title,desc,userid
     });
   
     // here password hasing
-console.log(finalQuery)
+//console.log(finalQuery)
   
     const storeData = await finalQuery.save();
-    console.log("usre")
+  //  console.log("usre")
 
   
     // console.log(storeData);
@@ -35,6 +35,88 @@ console.log(finalQuery)
     }
   
   });
+
+
+  ////updating mentor id
+
+  router.put("/querypick/:_id", async (req, res) => {
+    try {
+     // console.log(req.params._id);
+    //  console.log(req.query._id);
+      const post = await querydb.findByIdAndUpdate(
+        req.query._id,
+        {mentorid: req.params._id },
+        { new: true }
+        
+      );
+      if (!post) return res.status(404).send("Post not found");
+      res.send(post);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+  
+
+  ////////status update
+
+
+  
+  router.put("/queryreopen/:_id", async (req, res) => {
+    try {
+      //console.log(req.params._id);
+    //  console.log(req.query._id);
+      const post = await querydb.findByIdAndUpdate(
+        {_id:req.params._id},
+        {status:"Reopen or Close" },
+        { new: true }
+        
+      );
+      if (!post) return res.status(404).send("Post not found");
+      res.send(post);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+  
+
+  /////status close
+
+
+  router.put("/queryclose/:_id", async (req, res) => {
+    try {
+     // console.log(req.params._id);
+    //  console.log(req.query._id);
+      const post = await querydb.findByIdAndUpdate(
+        {_id:req.params._id},
+        {status:"closed" },
+        { new: true }
+        
+      );
+      if (!post) return res.status(404).send("Post not found");
+      res.send(post);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+  
+  //////////////
+  router.put("/querystudentreopen/:_id", async (req, res) => {
+    try {
+     // console.log(req.params._id);
+    //  console.log(req.query._id);
+      const post = await querydb.findByIdAndUpdate(
+        {_id:req.params._id},
+        {status:"Assigned" },
+        { new: true }
+        
+      );
+      if (!post) return res.status(404).send("Post not found");
+      res.send(post);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+  
   
   
   
@@ -47,7 +129,7 @@ console.log(finalQuery)
       const response = await querydb.findOne({_id:req.params._id});
      // if (response.length > 0) {
         res.status(200).json({
-          message: "Users Fetched Successfully!!!",
+          message: "Query Fetched Successfully!!!",
           data: response,
           success: true,
         });
@@ -65,6 +147,37 @@ console.log(finalQuery)
       });
     }
   });
+
+
+  //////getUserQuery
+
+  
+  router.get("/getUserQueryonly/:_id", async function (req, res, next) {
+    try {
+      const response = await querydb.find({userid:req.params._id});
+      console.log(req.params._id)
+      // if (response.length > 0) {
+        res.status(200).json({
+          message: "Query Fetched Successfully!!!",
+          data: response,
+          success: true,
+        });
+      // } else {
+      //   res.status(200).json({
+      //     message: "No Query!!!",
+      //     data: [],
+      //     success: false,
+      //   });
+     // }
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error,
+        success: false,
+      });
+    }
+  });
+
   
   ////////getuser
   
@@ -72,7 +185,7 @@ console.log(finalQuery)
     try {
       const response = await querydb.find();
       if (response.length > 0) {
-        res.status(201).json({
+        res.status(200).json({
           message: "Users Fetched Successfully!!!",
           data: response,
           success: true,
@@ -103,7 +216,7 @@ console.log(finalQuery)
       const response = await querydb.findOne({_id:req.params._id});
      // if (response.length > 0) {
         res.status(200).json({
-          message: "Users Fetched Successfully!!!",
+          message: "Query Fetched Successfully!!!",
           data: response,
           success: true,
         });

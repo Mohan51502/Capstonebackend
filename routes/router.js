@@ -49,7 +49,7 @@ router.post("/register", async (req, res) => {
             const storeData = await finalUser.save();
 
             // console.log(storeData);
-            res.status(201).json({ status: 201, storeData })
+            res.status(200).json({ status: 200, storeData })
         }
 
     } catch (error) {
@@ -102,7 +102,7 @@ router.get("/getAllUser/:_id", async function (req, res, next) {
     try {
       const response = await userdb.find();
       if (response.length > 0) {
-        res.status(201).json({
+        res.status(200).json({
           message: "Users Fetched Successfully!!!",
           data: response,
           success: true,
@@ -134,7 +134,7 @@ router.get("/getAllUser/:_id", async function (req, res, next) {
     try {
       const response = await userdb.find({role:"student"});
       if (response.length > 0) {
-        res.status(201).json({
+        res.status(200).json({
           message: "Users Fetched Successfully!!!",
           data: response,
           success: true,
@@ -156,14 +156,14 @@ router.get("/getAllUser/:_id", async function (req, res, next) {
   });
 
 
-  //////////////////get manager
+  //////////////////get mentor
 
 
     router.get("/getMentoronly", async function (req, res, next) {
     try {
       const response = await userdb.find({role:"mentor"});
       if (response.length > 0) {
-        res.status(201).json({
+        res.status(200).json({
           message: "Users Fetched Successfully!!!",
           data: response,
           success: true,
@@ -226,14 +226,14 @@ router.post("/login", async (req, res) => {
                     userValid,
                     token
                 }
-                res.status(201).json({status:201,result})
+                res.status(200).json({status:200,result})
             }
         }else{
-            res.status(401).json({status:401,message:"invalid details"});
+            res.status(400).json({status:400,message:"invalid details"});
         }
 
     } catch (error) {
-        res.status(401).json({status:401,error});
+        res.status(400).json({status:400,error});
        // console.log("catch block");
     }
 });
@@ -244,9 +244,9 @@ router.post("/login", async (req, res) => {
 router.get("/validuser",authenticate,async(req,res)=>{
     try {
         const ValidUserOne = await userdb.findOne({_id:req.userId});
-        res.status(201).json({status:201,ValidUserOne});
+        res.status(200).json({status:200,ValidUserOne});
     } catch (error) {
-        res.status(401).json({status:401,error});
+        res.status(400).json({status:400,error});
     }
 });
 
@@ -263,10 +263,10 @@ router.get("/logout",authenticate,async(req,res)=>{
 
         req.rootUser.save();
 
-        res.status(201).json({status:201})
+        res.status(200).json({status:200})
 
     } catch (error) {
-        res.status(401).json({status:401,error})
+        res.status(400).json({status:400,error})
     }
 });
 
@@ -279,7 +279,7 @@ router.post("/sendpasswordlink",async(req,res)=>{
     const {email} = req.body;
 
     if(!email){
-        res.status(401).json({status:401,message:"Enter Your Email"})
+        res.status(400).json({status:400,message:"Enter Your Email"})
     }
 
     try {
@@ -332,13 +332,13 @@ router.get("/forgotpassword/:id/:token",async(req,res)=>{
        // console.log(verifyToken)
 
         if(validuser && verifyToken._id){
-            res.status(201).json({status:201,validuser})
+            res.status(200).json({status:200,validuser})
         }else{
-            res.status(401).json({status:401,message:"user not exist"})
+            res.status(400).json({status:400,message:"user not exist"})
         }
 
     } catch (error) {
-        res.status(401).json({status:401,error})
+        res.status(400).json({status:400,error})
     }
 });
 
@@ -364,7 +364,8 @@ router.put("/:_id", async (req, res) => {
   try {
     const post = await userdb.findByIdAndUpdate(
       req.params._id,
-      { fname: req.body.fname, email: req.body.email },
+      { fname: req.body.fname, email: req.body.email, role:req.body.role,
+         course:req.body.course, phonenumber:req.body.phonenumber },
       { new: true }
     );
     if (!post) return res.status(404).send("Post not found");
@@ -417,13 +418,13 @@ router.post("/:id/:token",async(req,res)=>{
             const setnewuserpass = await userdb.findByIdAndUpdate({_id:id},{password:newpassword});
 
             setnewuserpass.save();
-            res.status(201).json({status:201,setnewuserpass})
+            res.status(200).json({status:200,setnewuserpass})
 
         }else{
-            res.status(401).json({status:401,message:"user not exist"})
+            res.status(400).json({status:400,message:"user not exist"})
         }
     } catch (error) {
-        res.status(401).json({status:401,error})
+        res.status(400).json({status:400,error})
     }
 })
 

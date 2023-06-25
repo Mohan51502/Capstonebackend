@@ -20,7 +20,12 @@ const QuerySchema = new mongoose.Schema({
   },
   userid:{
     type: mongoose.Schema.Types.ObjectId,
-    ref:"users"
+  },
+  mentorid:{
+    type: mongoose.Schema.Types.ObjectId,
+  },
+  status:{
+    type:String,
   }
 
 

@@ -20,7 +20,6 @@ const LeaveSchema = new mongoose.Schema({
   },
   userid:{
     type: mongoose.Schema.Types.ObjectId,
-    ref:"users"
   }
 
 
