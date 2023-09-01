@@ -362,12 +362,16 @@ router.get('/users/logout', async (req, res) => {
 // Get a single user by id and update 
 router.put("/:_id", async (req, res) => {
   try {
+    
     const post = await userdb.findByIdAndUpdate(
       req.params._id,
       { fname: req.body.fname, email: req.body.email, role:req.body.role,
          course:req.body.course, phonenumber:req.body.phonenumber },
       { new: true }
+      
     );
+    console.log(req.params._id)
+
     if (!post) return res.status(404).send("Post not found");
     res.send(post);
   } catch (error) {
