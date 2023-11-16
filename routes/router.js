@@ -298,7 +298,7 @@ router.post("/sendpasswordlink",async(req,res)=>{
                 from:process.env.EMAIL,
                 to:email,
                 subject:"Sending Email For password Reset from MOHAN Application",
-                text:`This Link Valid For 2 MINUTES https://majestic-yeot-68002b.netlify.app//forgotpassword/${userfind.id}/${setusertoken.verifytoken}`
+                text:`This Link Valid For 2 MINUTES https://capstonebackend-ivdw.onrender.com/forgotpassword/${userfind.id}/${setusertoken.verifytoken}`
             }
 
             transporter.sendMail(mailOptions,(error,info)=>{
